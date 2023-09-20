@@ -1,0 +1,129 @@
+.rich-text {
+  z-index: 1;
+}
+
+.rich-text__wrapper {
+  display: flex;
+  justify-content: center;
+  width: calc(100% - 4rem / var(--font-body-scale));
+}
+
+.rich-text:not(.rich-text--full-width) .rich-text__wrapper {
+  margin: auto;
+  width: calc(100% - 8rem / var(--font-body-scale));
+}
+
+.rich-text__blocks {
+  width: 100%;
+}
+.index-rich-text h2 {
+  position: relative;
+  width: fit-content;
+}
+.index-rich-text h2 p{
+  margin: 0;
+}
+.index-rich-text .item-star{
+  position: absolute;right: -35px;top: -25px;
+}
+@media screen and (min-width: 750px) {
+  .rich-text__wrapper {
+    width: 100%;
+  }
+
+  .rich-text__wrapper--left {
+    justify-content: flex-start;
+  }
+
+  .rich-text__wrapper--right {
+    justify-content: flex-end;
+  }
+
+  .rich-text__blocks {
+    max-width: 50rem;
+  }
+}
+.index-rich-text .rich-text__blocks {
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 750px){
+  .index-rich-text .rich-text__wrapper {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 990px){
+
+  .index-rich-text svg.custom-logo {
+    width: 63px;
+    height: auto;
+  }
+  .index-rich-text svg.elStar {
+    width: 15px;
+    height: auto;
+  }
+  .index-rich-text .item-star {
+    right: -20px;
+    top: -9px;
+    width: 15px;
+    height: auto;
+  }
+  .index-rich-text h2 {
+    font-size: 5rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  .index-rich-text .custom_html p {
+    font-size: 3.4rem;
+  }
+  .index-rich-text h2.hxl {
+    font-size: 14rem;
+    line-height: 12rem;
+  }
+  .rich-text__blocks {
+    max-width: 74rem;
+  }
+}
+
+.rich-text__blocks * {
+  overflow-wrap: break-word;
+}
+
+.rich-text__blocks > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.rich-text__blocks > * + * {
+  margin-top: 2rem;
+}
+
+.rich-text__blocks > * + a {
+  margin-top: 3rem;
+}
+
+.rich-text__buttons {
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  word-break: break-word;
+}
+
+.rich-text__buttons--multiple > * {
+  flex-grow: 1;
+  min-width: 22rem;
+}
+
+.rich-text__buttons + .rich-text__buttons {
+  margin-top: 1rem;
+}
+
+.rich-text__blocks.left .rich-text__buttons {
+  justify-content: flex-start;
+}
+
+.rich-text__blocks.right .rich-text__buttons {
+  justify-content: flex-end;
+}

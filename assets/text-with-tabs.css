@@ -1,0 +1,93 @@
+
+.index-text-with-tabs [data-tab-content] {
+    display: none;
+}
+
+.index-text-with-tabs .active[data-tab-content] {
+    display: block;
+    max-width: 430px;
+    margin-top: 10px;
+}
+
+.index-text-with-tabs .tabs {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.index-text-with-tabs .tab {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+.index-text-with-tabs [data-tab-content] p {
+    font-size: 14px;
+    margin: 0;
+}
+
+
+@media screen and (min-width: 960px){
+    .index-text-with-tabs h2 {
+        font-size: 10rem;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+    .index-text-with-tabs li.tab {
+        padding-right: 22px;
+    }
+}
+.index-text-with-tabs .text-tabs-type-2 h3 {
+    margin: 2px 0 10px;
+}
+.index-text-with-tabs .text-tabs-type-2 .active[data-tab-content] {
+    max-width: 100%;
+}
+.index-text-with-tabs .text-tabs-type-2 .text-content-wrapper a {
+    text-decoration: none;
+    color: var(--color-base-accent-2-hex);
+    font-size: 1.6rem;
+}
+.index-text-with-tabs .text-tabs-type-2 li.tab {
+    text-transform: uppercase;
+}
+.index-text-with-tabs .text-tabs-type-2 .text-content-wrapper {
+    padding-left: 2rem;
+}
+.index-text-with-tabs .text-tabs-type-2 .tabs {
+    border-bottom: 1px solid var(--color-base-accent-1-hex);
+    margin-bottom: 30px;
+}
+.index-text-with-tabs .text-tabs-type-2 [data-tab-content] ul {
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+    margin-bottom: 0;
+    margin-top: 30px;
+}
+.index-text-with-tabs .text-tabs-type-2 h3 {
+    font-family: var(--font-body-family);
+}
+@media screen and (max-width: 960px){
+    .index-text-with-tabs .text-tabs-type-2 li.tab {
+        padding-right: 15px;
+    }
+    .index-text-with-tabs .text-tabs-type-2 .tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .index-text-with-tabs h2 {
+        font-size: 32px;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+    .index-text-with-tabs .tabs {
+        flex-direction: column;
+    }
+}
+@media screen and (min-width: 960px){
+    .index-text-with-tabs .text-tabs-type-2 li.tab {
+        padding-right: 5rem;
+    }
+}
+

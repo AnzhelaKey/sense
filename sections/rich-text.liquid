@@ -1,0 +1,463 @@
+{{ 'section-rich-text.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  @media screen and (min-width: 990px){
+  #shopify-section-{{ section.id }} .rich-text__blocks{
+  max-width: {{ section.settings.rich_text_block_width }}rem;
+  }
+  }
+{%- endstyle -%}
+
+<div class="isolate{% unless section.settings.full_width %} page-width{% endunless %}">
+  <div class="rich-text content-container color-{{ section.settings.color_scheme }} gradient{% if section.settings.full_width %} rich-text--full-width content-container--full-width{% endif %} section-{{ section.id }}-padding">
+    <div class="rich-text__wrapper rich-text__wrapper--{{ section.settings.desktop_content_position }}{% if section.settings.full_width %} page-width{% endif %}">
+      <div class="rich-text__blocks {{ section.settings.content_alignment }}">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              <h2
+                class="rich-text__heading rte inline-richtext {{ block.settings.heading_size }}"
+                {{ block.shopify_attributes }}
+              >
+               {% if block.settings.star_decor %}
+                 <?xml version="1.0" encoding="UTF-8"?> <svg class="item-star" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="29px" height="30px" viewBox="0 0 29 30"> <!-- Generator: Sketch 52.1 (67048) - http://www.bohemiancoding.com/sketch --> <title>Fill 1 Copy</title> <desc>Created with Sketch.</desc> <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Desktop-HD-Copy" transform="translate(-906.000000, -577.000000)" fill="#020303"> <path d="M932.387145,585.586636 C930.675886,584.791595 928.753082,585.27983 927.319719,586.333738 C926.725754,586.768871 925.856033,587.555799 924.709129,588.695997 C923.630717,589.765393 922.78133,590.546052 922.160611,591.037236 C922.074637,591.105456 921.988664,591.161508 921.902334,591.226778 C921.930873,591.139013 921.95192,591.056412 921.982243,590.967173 C922.24266,590.20532 922.719258,589.128918 923.413822,587.738703 C924.107316,586.258511 924.562867,585.148552 924.780476,584.408456 C925.290251,582.667185 925.263139,580.634226 923.902193,579.128222 C922.065362,577.096 918.970682,577.290704 917.329343,579.161779 C916.068996,580.598825 915.924162,582.639528 916.45106,584.374899 C916.667598,585.093239 917.122793,586.191398 917.817357,587.67122 C918.468042,589.061804 918.92395,590.138206 919.18401,590.89969 C919.22004,591.005523 919.245369,591.107669 919.278902,591.212396 C919.206841,591.157083 919.137278,591.111357 919.064504,591.05383 C918.444141,590.562277 917.601175,589.760968 916.53632,588.648796 C915.389059,587.509336 914.508279,586.71872 913.895051,586.276212 C912.450272,585.236685 910.571703,584.635242 908.765195,585.50809 C906.327979,586.685532 905.550652,589.788624 906.765336,591.980149 C907.697843,593.662788 909.530749,594.436441 911.289812,594.45451 C912.017552,594.46336 913.168737,594.354945 914.745151,594.129635 C916.225247,593.919812 917.356455,593.804391 918.137705,593.78374 C918.246509,593.781159 918.347822,593.788165 918.454843,593.787428 C918.381712,593.841266 918.317857,593.895105 918.242585,593.948944 C917.598678,594.40694 916.600889,594.988101 915.248505,595.690953 C913.845821,596.467187 912.846248,597.088543 912.24943,597.55502 C910.846746,598.653917 909.712684,600.315168 909.957405,602.360296 C910.287742,605.120444 912.902256,606.843646 915.294167,606.327018 C917.130641,605.929866 918.408467,604.366704 918.968899,602.643133 C919.202204,601.930325 919.457983,600.765421 919.73802,599.145839 C920.002005,597.625822 920.245298,596.477881 920.467901,595.703859 C920.498937,595.596182 920.536751,595.498461 920.569214,595.392997 C920.595969,595.481499 920.626292,595.560781 920.652333,595.651496 C920.874936,596.426255 921.101106,597.586734 921.329774,599.13367 C921.610525,600.752146 921.873082,601.927006 922.117802,602.657883 C922.695714,604.376661 923.873298,606.004724 925.831062,606.395975 C928.472331,606.924404 930.865669,604.886283 931.129296,602.375415 C931.331922,600.447183 930.288828,598.708124 928.875799,597.624347 C928.292179,597.174832 927.299028,596.563064 925.895987,595.787567 C924.57892,595.058165 923.597898,594.464097 922.954347,594.006101 C922.865163,593.942306 922.786681,593.875192 922.699995,593.81066 C922.789892,593.811766 922.871941,593.806603 922.963265,593.808816 C923.744873,593.829466 924.882502,593.965538 926.376153,594.218505 C927.952567,594.443078 929.114455,594.547805 929.862529,594.533055 C931.622305,594.496179 933.484107,593.841266 934.449433,592.038044 C935.751517,589.604246 934.616028,586.621737 932.387145,585.586636" id="Fill-1-Copy"></path> </g> </g> </svg>
+               {% endif %}
+                 {{ block.settings.heading }}
+              </h2>
+            {%- when 'custom_html' -%}
+              <div class="custom_html">
+                {{ block.settings.custom_html }}
+              </div>
+            {%- when 'caption' -%}
+              <p
+                class="rich-text__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.caption | escape }}
+              </p>
+            {%- when 'text' -%}
+            <style>
+              @media screen and (min-width: 968px){
+                .item--text-{{ block.id }}{
+                  max-width: {{ block.settings.text_container_width }}%;
+                {% unless block.settings.text_alignment == 'left' %}{{ block.settings.text_alignment }}{% endunless %}
+                }
+              }
+
+            </style>
+              <div class="rich-text__text rte item--text-{{ block.id }}" {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+            {%- when 'button' -%}
+            <style>
+              @media screen and (min-width: 968px){
+                .item--btn-{{ block.id }}{
+                  max-width: {{ block.settings.text_container_width }}%;
+                {% unless block.settings.text_alignment == 'left' %}{{ block.settings.text_alignment }}{% endunless %}
+                }
+              }
+
+            </style>
+              <div
+                class="rich-text__buttons{% if block.settings.button_label != blank and block.settings.button_label_2 != blank %} rich-text__buttons--multiple{% endif %} item--btn-{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.button_label != blank -%}
+                  <a
+                    {% if block.settings.button_link == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.button_link }}"
+                    {% endif %}
+                    class="button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
+                  >
+                    {{- block.settings.button_label | escape -}}
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.button_label_2 != blank -%}
+                  <a
+                    {% if block.settings.button_link_2 == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.button_link_2 }}"
+                    {% endif %}
+                    class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
+                  >
+                    {{- block.settings.button_label_2 | escape -}}
+                  </a>
+                {%- endif -%}
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.rich-text.name",
+  "tag": "section",
+  "class": "section index-rich-text",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.rich-text.settings.desktop_content_position.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.rich-text.settings.desktop_content_position.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.rich-text.settings.desktop_content_position.options__3.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.rich-text.settings.desktop_content_position.label",
+      "info": "t:sections.rich-text.settings.desktop_content_position.info"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.rich-text.settings.content_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.rich-text.settings.content_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.rich-text.settings.content_alignment.options__3.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.rich-text.settings.content_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "t:sections.rich-text.settings.full_width.label"
+    },
+    {
+      "type": "range",
+      "id": "rich_text_block_width",
+      "min": 54,
+      "max": 90,
+      "step": 1,
+      "unit": "rem",
+      "label": "Rich text block width",
+      "default": 78,
+      "info":"Only desktop"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_html",
+      "name": "Custom html",
+      "settings": [
+        {
+          "type": "html",
+          "id": "custom_html",
+          "label": "Custom html"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "t:sections.rich-text.blocks.heading.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+        },
+
+        {
+          "type": "checkbox",
+          "id": "star_decor",
+          "label": "Use star decor",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h2",
+              "label": "t:sections.all.heading_size.options__1.label"
+            },
+            {
+              "value": "h1",
+              "label": "t:sections.all.heading_size.options__2.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.heading_size.options__3.label"
+            },
+            {
+              "value": "hxl",
+              "label": "t:sections.all.heading_size.options__4.label"
+            }
+          ],
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        }
+      ]
+    },
+    {
+      "type": "caption",
+      "name": "t:sections.rich-text.blocks.caption.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "caption",
+          "default": "Add a tagline",
+          "label": "t:sections.rich-text.blocks.caption.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "subtitle",
+              "label": "t:sections.rich-text.blocks.caption.settings.text_style.options__1.label"
+            },
+            {
+              "value": "caption-with-letter-spacing",
+              "label": "t:sections.rich-text.blocks.caption.settings.text_style.options__2.label"
+            }
+          ],
+          "default": "caption-with-letter-spacing",
+          "label": "t:sections.rich-text.blocks.caption.settings.text_style.label"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.rich-text.blocks.caption.settings.caption_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.rich-text.blocks.caption.settings.caption_size.label"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.rich-text.blocks.text.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+          "label": "t:sections.rich-text.blocks.text.settings.text.label"
+        },
+        {
+          "type": "range",
+          "id": "text_container_width",
+          "min": 40,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Container width",
+          "default": 100,
+          "info":"Only desktop"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "margin:0 auto;",
+              "label": "Center"
+            },
+            {
+              "value": "margin-left:auto;",
+              "label": "Right"
+            }
+          ],
+          "default": "left",
+          "label": "Container horizontal alignment"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.rich-text.blocks.buttons.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_1.label",
+          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_1.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_1.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary",
+          "default": false,
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_style_secondary_1.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_2.label",
+          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_2.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_2.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary_2",
+          "default": false,
+          "label": "t:sections.rich-text.blocks.buttons.settings.button_style_secondary_2.label"
+        },
+        {
+          "type": "range",
+          "id": "text_container_width",
+          "min": 40,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Container width",
+          "default": 100,
+          "info":"Only desktop"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "margin:0 auto;",
+              "label": "Center"
+            },
+            {
+              "value": "margin-left:auto;",
+              "label": "Right"
+            }
+          ],
+          "default": "left",
+          "label": "Container horizontal alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.presets.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

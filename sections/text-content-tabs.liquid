@@ -1,0 +1,177 @@
+{{ 'text-with-tabs.css' | asset_url | stylesheet_tag }}
+<style>
+
+    .index-text-with-tabs .tab.active {
+       color: var(--color-base-accent-2-hex);
+    }
+
+    .index-text-with-tabs .tab:hover {
+        color: var(--color-base-accent-2-hex);
+    }
+
+</style>
+
+{%- style -%}
+    .section-{{ section.id }}-padding {
+    padding-top: calc({{ section.settings.padding_top }}px * 0.75);
+    padding-bottom: calc({{ section.settings.padding_bottom }}px  * 0.75);
+    }
+
+    @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    }
+{%- endstyle -%}
+<text-component-tab>
+    <div class="color-{{ section.settings.color_scheme }} gradient page-width {% if section.settings.style_type == 'type_2' %}text-tabs-type-2{% endif %}">
+        <div class="section-{{ section.id }}-padding">
+            {{ section.settings.custom_liquid }}
+            <div class="text-content-wrapper">
+
+                <ul class="tabs">
+                    {%- for block in section.blocks -%}
+                        {% if forloop.first == true %}
+                            <li data-tab-target="#item{{ forloop.index }}" class="active tab">{{ block.settings.text }}</li>
+                        {% else %}
+                            <li data-tab-target="#item{{ forloop.index }}" class="tab">{{ block.settings.text }}</li>
+                        {% endif %}
+
+                    {%- endfor -%}
+
+
+                </ul>
+
+                <div class="tab-content">
+                    {%- for block in section.blocks -%}
+                        {% if forloop.first == true %}
+                            <div id="item{{ forloop.index }}" data-tab-content class="active">
+                                {{ block.settings.description }}
+                            </div>
+                        {% else %}
+                            <div id="item{{ forloop.index }}" data-tab-content>
+                                {{ block.settings.description }}
+                            </div>
+                        {% endif %}
+
+                    {%- endfor -%}
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</text-component-tab>
+
+
+{% schema %}
+{
+  "name": "Text with tabs",
+  "tag": "section",
+  "class": "section index-text-with-tabs",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style_type",
+      "label": "Style type",
+      "options": [
+        {
+          "value": "type_1",
+          "label": "Type 1"
+        },
+        {
+          "value": "type_2",
+          "label": "Type 2"
+        }
+      ],
+      "default": "type_1"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:sections.custom-liquid.settings.custom_liquid.label",
+      "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Text with tabs"
+    }
+  ]
+}
+{% endschema %}

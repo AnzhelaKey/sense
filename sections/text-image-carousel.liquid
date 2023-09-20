@@ -1,0 +1,412 @@
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-article-card.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'blog-post.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-card.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-article-card.css' | asset_url | stylesheet_tag }}</noscript>
+
+
+{%- style -%}
+
+
+    .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 990px) {
+    .image-text-carousel .slider--desktop.grid--1-col-desktop .grid__item {
+    width: 100%;
+    }
+    {% if section.settings.post_layout == "list" %}
+        #shopify-section-{{ section.id }} .card.article-card {
+        display: flex;
+        flex-direction: row;
+        }
+    {% endif %}
+    .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    }
+
+
+{%- endstyle -%}
+
+{%- liquid
+    assign posts_displayed = section.blocks.size
+    if section.settings.post_limit <= section.blocks.size
+        assign posts_exceed_limit = true
+        assign posts_displayed = section.settings.post_limit
+    endif
+
+    assign columns_mobile_int = section.settings.columns_mobile | plus: 0
+    assign show_mobile_slider = false
+    if section.settings.swipe_on_mobile and section.blocks.size > columns_mobile_int
+        assign show_mobile_slider = true
+    endif
+    assign show_desktop_slider = false
+    if section.settings.enable_desktop_slider and posts_displayed > section.settings.columns_desktop
+        assign show_desktop_slider = true
+    endif
+-%}
+
+
+<div class="blog color-{{ section.settings.color_scheme }} gradient{% if section.settings.heading == blank %} no-heading{% endif %} section-style-{{ section.id }}">
+    <div class="page-width isolate section-{{ section.id }}-padding">
+        {%- unless section.settings.heading == blank -%}
+            <div class="title-wrapper-with-link{% if posts_displayed > 2 %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
+                <h2 id="SectionHeading-{{ section.id }}" class="blog__title {{ section.settings.heading_size }}">
+                    {{ section.settings.heading | escape }}
+                </h2>
+
+
+            </div>
+        {%- endunless -%}
+
+        {%- if section.blocks.size > 0 -%}
+
+            <slider-component class="slider-mobile-gutter slider-component-full-width {% if show_desktop_slider %} slider-component-desktop{% endif %} {% if show_desktop_slider == false %}sliderDesktopHide{% endif %}">
+                <ul
+                        id="Slider-{{ section.id }}"
+                        class="blog__posts articles-wrapper contains-card contains-card--article{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid grid--peek grid--2-col-tablet grid--{{ section.settings.columns_desktop }}-col-desktop slider {% if posts_displayed > 2 %}slider--tablet{% else %}slider--mobile{% endif %} {% if show_desktop_slider %} slider--desktop{% endif %}"
+                        role="list"
+                        data-slider-per-mobile="1"
+                        data-slider-per-desktop="{{ section.settings.columns_desktop }}"
+                >
+                    {% for block in section.blocks %}
+
+                        <li
+                                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                                class="blog__post grid__item article slider__slide slider__slide--full-width {% unless section.settings.post_layout == 'grid' %}card-information-v-{{ section.settings.caption_vertical_alignment }}{% endunless %}  post-layout-{{ section.settings.post_layout }}"
+                        >
+
+
+                            {%- if block.settings.image != empty -%}
+                                {%- liquid
+                                    assign ratio = 1
+                                    if media_aspect_ratio != null
+                                        assign ratio = media_aspect_ratio
+                                    endif
+                                -%}
+                                <div class="article-card-wrapper card-wrapper underline-links-hover">
+
+                                    <div
+                                            class="
+        card article-card
+        card--{{ settings.blog_card_style }}
+        article-card__image--{{ media_height }}
+         card--media
+        {% if settings.blog_card_style == 'card' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %}
+        {% if settings.blog_card_style == 'card' and media_height == nil and block.settings.image == empty %} ratio{% endif %}
+      "
+                                            style="--ratio-percent: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;"
+                                    >
+                                        <div
+                                                class="card__inner {% if settings.blog_card_style == 'standard' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %}{% if block.settings.image or settings.blog_card_style == 'standard' %} ratio{% endif %}"
+                                                style="--ratio-percent: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;"
+                                        >
+                                            {%- if block.settings.image -%}
+                                                <div class="article-card__image-wrapper card__media">
+                                                    <div
+                                                            class="article-card__image media media--hover-effect"
+                                                            {% if section.settings.media_height == 'adapt' %}
+                                                                style="padding-bottom: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;"
+                                                            {% endif %}
+                                                    >
+
+                                                        <img
+                                                                srcset="
+                  {%- if block.settings.image.src.width >= 165 -%}{{ block.settings.image.src | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if block.settings.image.width >= 360 -%}{{ block.settings.image.src | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if block.settings.image.width >= 533 -%}{{ block.settings.image.src | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if block.settings.image.width >= 720 -%}{{ block.settings.image.src | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if block.settings.image.width >= 1000 -%}{{ block.settings.image.src | image_url: width: 1000 }} 1000w,{%- endif -%}
+                  {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image.src | image_url: width: 1500 }} 1500w,{%- endif -%}
+                  {{ block.settings.image.src | image_url }} {{ block.settings.image.src.width }}w
+                "
+                                                                src="{{ block.settings.image.src | image_url: width: 533 }}"
+                                                                sizes="(min-width: 1200px) {{ 1200 | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)"
+                                                                alt="{{ block.settings.image.src.alt | escape }}"
+                                                                class="motion-reduce"
+                                                                {% unless lazy_load == false %}
+                                                                    loading="lazy"
+                                                                {% endunless %}
+                                                                width="{{ block.settings.image.width }}"
+                                                                height="{{ block.settings.image.height }}"
+                                                        >
+
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="info-container">
+                                    {% if block.settings.title.size > 0 %}
+                                        <div class="info-wrapper">
+                                            {{ block.settings.title }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {%- endif -%}
+
+                        </li>
+                    {%- endfor -%}
+                </ul>
+                {%- if posts_exceed_limit -%}
+                    <div class="slider-buttons no-js-hidden{% if section.settings.post_limit < 3 %} medium-hide{% endif %}{% if section.settings.post_limit < 2 %} small-hide{% endif %}">
+                        <button
+                                type="button"
+                                class="slider-button slider-button--prev"
+                                name="previous"
+                                aria-label="{{ 'general.slider.previous_slide' | t }}"
+                        >
+                            {% render 'icon-caret' %}
+                        </button>
+
+                        <button
+                                type="button"
+                                class="slider-button slider-button--next"
+                                name="next"
+                                aria-label="{{ 'general.slider.next_slide' | t }}"
+                        >
+                            {% render 'icon-caret' %}
+                        </button>
+                    </div>
+                {%- endif -%}
+            </slider-component>
+
+
+        {%- else -%}
+            <div class="blog-placeholder">
+                <div class="placeholder media media--landscape">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+                <div class="blog-placeholder__content">
+                    <h2>
+                        {{ 'sections.featured_blog.onboarding_title' | t }}
+                    </h2>
+                    <p class="rte-width">
+                        {{ 'sections.featured_blog.onboarding_content' | t }}
+                    </p>
+                </div>
+            </div>
+        {%- endif -%}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text with image carousel",
+  "tag": "section",
+  "class": "section blog-post image-text-carousel",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+
+
+    {
+      "type": "range",
+      "id": "post_limit",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "Item limit"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "t:sections.featured-blog.settings.columns_desktop.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_desktop_slider",
+      "label": "t:sections.featured-collection.settings.enable_desktop_slider.label",
+      "default": false
+    },
+
+    {
+      "type": "select",
+      "id": "post_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "list",
+          "label": "List"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "textalign_pos",
+      "label": "Text align",
+      "default": "left",
+      "options": [
+        {
+          "label": "Left align",
+          "value": "left"
+        },
+        {
+          "label": "Center align",
+          "value": "center"
+        },
+        {
+          "label": "Right align",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "caption_vertical_alignment",
+      "info": "Only list type or with hidden featured image",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "text",
+      "id": "caption_padding",
+      "label": "Caption padding",
+      "default": "0rem 1rem 0rem 1rem"
+    },
+
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Info"
+        }
+
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text with image carousel",
+      "settings": {
+
+      }
+    }
+  ]
+}
+{% endschema %}
